@@ -226,6 +226,7 @@ import HeaderAccountMenuServer from '~/components/Header/AccountMenu.server.vue'
 import ToggleServer from '~/components/Settings/Toggle.server.vue'
 import SearchProviderToggleServer from '~/components/SearchProviderToggle.server.vue'
 import PackageTrendsChart from '~/components/Package/TrendsChart.vue'
+import FacetBarChart from '~/components/Compare/FacetBarChart.vue'
 import PackageLikeCard from '~/components/Package/LikeCard.vue'
 import SizeIncrease from '~/components/Package/SizeIncrease.vue'
 
@@ -784,6 +785,24 @@ describe('component accessibility audits', () => {
 
       const results = await runAxe(wrapper)
       expect(results.violations).toEqual([])
+    })
+
+    describe('FacetBarChart', () => {
+      it('should have no accessibility violations', async () => {
+        const wrapper = await mountSuspended(FacetBarChart, {
+          props: {
+            values: [
+              { raw: 100, display: '100 MB' },
+              { raw: 50, display: '50 MB' },
+            ],
+            packages: ['nuxt', 'vue'],
+            label: 'Package Size',
+            description: 'Size of the package itself (unpacked)',
+          },
+        })
+        const results = await runAxe(wrapper)
+        expect(results.violations).toEqual([])
+      })
     })
 
     it('should have no accessibility violations with empty data', async () => {
@@ -2217,8 +2236,13 @@ describe('component accessibility audits', () => {
       const component = await mountSuspended(AuthorList, {
         props: {
           authors: [
-            { name: 'Daniel Roe', blueskyHandle: 'danielroe.dev' },
-            { name: 'Salma Alam-Naylor' },
+            {
+              name: 'Daniel Roe',
+              blueskyHandle: 'danielroe.dev',
+              avatar: null,
+              profileUrl: 'https://bsky.app/profile/danielroe.dev',
+            },
+            { name: 'Salma Alam-Naylor', avatar: null, profileUrl: null },
           ],
         },
       })
@@ -2256,7 +2280,7 @@ describe('component accessibility audits', () => {
             cid: 'bafyreigincphooxt7zox3blbocf6hnczzv36fkuj2zi5iuzpjgq6gk6pju',
             author: {
               did: 'did:plc:2gkh62xvzokhlf6li4ol3b3d',
-              handle: 'patak.dev',
+              handle: 'patak.cat',
               displayName: 'patak',
               avatar:
                 'https://cdn.bsky.app/img/avatar/plain/did:plc:2gkh62xvzokhlf6li4ol3b3d/bafkreifgzl4e5jqlakd77ajvnilsb5tufsv24h2sxfwmitkzxrh3sk6mhq@jpeg',
@@ -2292,7 +2316,14 @@ describe('component accessibility audits', () => {
     it('should have no accessibility violations', async () => {
       const component = await mountSuspended(BlogPostListCard, {
         props: {
-          authors: [{ name: 'Daniel Roe', blueskyHandle: 'danielroe.dev' }],
+          authors: [
+            {
+              name: 'Daniel Roe',
+              blueskyHandle: 'danielroe.dev',
+              avatar: null,
+              profileUrl: 'https://bsky.app/profile/danielroe.dev',
+            },
+          ],
           title: 'Building Accessible Vue Components',
           topics: ['accessibility', 'vue'],
           excerpt: 'A guide to building accessible components in Vue.js applications.',
